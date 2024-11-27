@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+.card{
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    padding: 10px;
+    margin: 5px;
+    text-align: center;
+}
+
+</style>
+<body>
+<h1>User cards</h1>
+<div><label>Username </label><input type="text" id="username"></div>
+<div><label>Width </label><input type="text" id="width"><label> px</label></div>
+<div><label>Height</label><input type="text" id="height"><label> px</label></div>
+<div><label>ID</label><input type="text" id="id"></div>
+<div><label>Color</label>
+    <select id="color">
+        <option>red</option>
+        <option>blue</option>
+        <option>green</option>
+        <option>yellow</option>
+    </select>
+</div>
+<div><button id="createButton" onclick="createCard()">Create</button></div>
+</body>
+<script>
+function createCard(){
+    let username = document.getElementById('username').value
+    let width = parseInt(document.getElementById('width').value)
+    let height = parseInt(document.getElementById('height').value)
+    let id = document.getElementById('id').value
+    let color =  document.getElementById('color').value
+    console.log(username, width, height, id, color);
+
+    if (username === '' || isNaN(width) || isNaN(height) || id === '' || color === '') {
+        alert("Greska");
+        return;
+    }
+    if(width<0 || width>350 || height<0 || width>350){
+        alert("Nevalidni px")
+        return;
+    }
+    let vrednost = 0;
+    let existingCard = document.getElementById(username)
+    if (existingCard) {
+        if(color === 'green'){
+            vrednost+=1000;
+        }
+        vrednost+=width*height;
+        existingCard.children[0].innerText = "ID: " + id;
+        existingCard.children[1].innerText = "Width: " + width + "px";
+        existingCard.children[2].innerText = "Height: " + height + "px";
+        existingCard.children[3].innerText = "Value: "+ vrednost;
+        existingCard.style.backgroundColor = color;
+
+    }else{
+        if(color === 'green'){
+            vrednost+=1000;
+        }
+        vrednost+=width*height;
+        let card = document.createElement('div')
+        card.id = username
+        card.classList.add('card')
+        card.innerHTML = "<p> ID: "+id+"</p>"+
+            "<p> Width: "+width+"</p>"+
+            "<p> Height: "+height+"</p>"+
+            "<p> Value: "+vrednost+"</p>"
+
+        let sellButton = document.createElement('button')
+        sellButton.textContent = "Sell"
+        card.appendChild(sellButton)
+        sellButton.onclick = function(){
+            card.parentNode.removeChild(card)
+        }
+        card.appendChild(sellButton)
+        card.style.backgroundColor = color;
+        document.body.appendChild(card)
+    }
+
+}
+</script>
+</html>
+
+
