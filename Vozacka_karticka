@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    .card{
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px 0;
+    }
+    body{
+
+    }
+</style>
+<body>
+<h1>Осигорување на возила</h1>
+<div><label>Ime </label><input id="ime" type="text"></div>
+<div><label>Prezime </label><input id="prezime" type="text"></div>
+<div><label>Tablica </label><input id="tablica" type="text"></div>
+<div><label>Godini </label><input id="godini" type="text"></div>
+<div><label>Soobrakjajna nezgoda </label>
+    <input name="nezgoda" type="radio" value="yes">Yes
+    <input name="nezgoda" type="radio" value="no">No
+</div>
+<!--<h2>Vkupno za plakjanje: <span id="total">0</span></h2>-->
+<div><button id="gs" onclick="generiraj()">Generiraj smetka</button></div>
+</body>
+<script>
+function generiraj(){
+    let brojac = 0;
+    let ime = document.getElementById('ime').value
+    let prezime = document.getElementById('prezime').value
+    let tablica = document.getElementById('tablica').value
+    let godini = parseInt(document.getElementById('godini').value)
+    let nezgoda = document.getElementsByName('nezgoda')
+    let osnovnaCena = 3000
+    let nezgodaVrednost = null;
+    for(let radio of nezgoda){
+        if(radio.checked){
+            nezgodaVrednost = radio.value;
+            break;
+        }
+    }
+    if(ime === '' || prezime === '' || tablica === '' || isNaN(godini) ||nezgodaVrednost === null){
+        alert("Greska!")
+        return;
+    }
+    let validTablica = isValidTablica(tablica)
+    if(validTablica !== true){
+        alert("Nevalidna tablica")
+        return;
+    }
+    if(areDigitsTheSame(tablica) === true){
+        osnovnaCena+=1000;
+    }
+    if(nezgodaVrednost === "yes"){
+        osnovnaCena+=500;
+    }
+    let card = document.createElement('div')
+    card.classList.add('card')
+    card.innerHTML = "<p>"+ime+" "+prezime+"</p>"+
+        "<p>Registerska karticka: "+tablica+"</p>"+
+        "<p>Nezgoda: "+nezgodaVrednost+"</p>"+
+        "<p>Starost: "+godini+"</p>"+
+        "<p>Za plakanje: "+osnovnaCena+"</p>"
+    if(nezgodaVrednost === 'yes'){
+        card.style.backgroundColor = 'red'
+    }
+    else{
+        card.style.backgroundColor = 'green'
+    }
+    brojac++;
+    let platiButton = document.createElement('button')
+    platiButton.innerHTML = 'Plati'
+    platiButton.onclick = function (){
+        card.style.backgroundColor = 'gray'
+        platiButton.disabled = true;
+        deleteButton.disabled = true;
+    }
+    let deleteButton = document.createElement('button');
+    deleteButton.innerHTML = 'Delete';
+    deleteButton.onclick = function () {
+        card.remove();
+        brojac--;
+    };
+    card.appendChild(platiButton);
+    card.appendChild(deleteButton);
+    document.body.appendChild(card);
+    let rez = document.getElementById('total');
+    rez.innerHTML = brojac;
+
+}
+function isValidTablica(tablica){
+    let parts = tablica.split('-')
+    if(parts.length !== 3){
+        return false;
+    }
+    let [prvDel, vtorDel, tretDel] =parts
+    if(prvDel.length !==2 ||!isAllUppercaseLetters(prvDel)){
+        return false;
+    }
+    if(vtorDel.length !==4 || !isAllDigits(vtorDel)){
+        return false;
+    }
+    if(tretDel.length !==2 ||!isAllUppercaseLetters(tretDel)){
+        return false;
+    }
+
+    return true;
+}
+function isAllUppercaseLetters(firstPart){
+    for(let char of firstPart){
+        if(char < 'A' || char > 'Z'){
+            return false;
+        }
+    }
+    return true;
+}
+function isAllDigits(secondPart){
+    for(let char of secondPart){
+        if(char < '0' || char > '9'){
+            return false;
+        }
+    }
+    return true;
+}
+function areDigitsTheSame(tablica) {
+    let parts = tablica.split('-')
+    let [prvDel, str, tretDel] =parts
+    if (str.length === 4) {
+        return str[0] === str[1] && str[1] === str[2] && str[2] === str[3];
+    }
+    return false;
+}
+</script>
+</html>
