@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+table{
+    border: 2px solid black;
+}
+
+</style>
+<body>
+<h1>Online classes</h1>
+<div><label>Ime i prezime</label><input id="imeIprezime" type="text"></div>
+<div><label>Email</label><input id="email" type="text"></div>
+<div><label>Godini</label><input id="godini" type="text"></div>
+<div><label>Username</label><input id="username" type="text"></div>
+<div><label>Password</label><input id="password" type="text"></div>
+<div>
+    <label>Role</label>
+    <select>
+        <option>teacher</option>
+        <option>student</option>
+    </select>
+</div>
+<div><button onclick="addRows()">Add</button></div>
+
+<h3>Dostapni profesori <span id="total">0</span></h3>
+<table id="tabela">
+    <tr>
+        <th>Ime</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Age</th>
+        <th>Role</th>
+        <th>Akcii</th>
+    </tr>
+</table>
+</body>
+<script>
+function addRows(){
+    let imeIprezime = document.getElementById('imeIprezime').value
+    let username = document.getElementById('username').value
+    let email = document.getElementById('email').value
+    let age = parseInt(document.getElementById('godini').value)
+    let role = document.querySelector('select').value
+    let password = document.getElementById('password').value;
+    let brojac = 0
+
+    if(!imeIprezime || !username || !email || !age || !role || !password){
+        alert("Greska")
+        return;
+    }
+    let tabelka = document.getElementById('tabela')
+    let rows = tabelka.getElementsByTagName('tr')
+    for(let i = 1; i < rows.length; i++){
+        let row = rows[i]
+        let usernameCell = row.cells[1]
+        if(usernameCell.textContent === username){
+            alert("Postoecko username")
+            return;
+        }
+    }
+
+    if(!invalidPass(password)){
+        alert("Nevaliden password")
+        return;
+    }
+    if(age < 18 && role === 'teacher'){
+        alert("Maloleten korisnik ne moze da bide nastavnik!")
+        return;
+    }
+    let tabela = document.getElementById('tabela')
+    let newRow = document.createElement('tr')
+    newRow.innerHTML = "<td>"+imeIprezime+"</td>" + "<td>"+username+"</td>" +
+        "<td>"+email+"</td>" + "<td>"+age+"</td>"+"<td>"+role+"</td>"
+
+    if (role === "teacher") {
+        newRow.style.backgroundColor = "blue";
+        brojac++;
+        let totall = document.getElementById('total')
+        totall.innerHTML = brojac;
+        let hireButtonCell = document.createElement('td')
+        let hireButton = document.createElement('button')
+        hireButton.textContent = "Hire"
+        hireButtonCell.appendChild(hireButton)
+        newRow.appendChild(hireButtonCell)
+        hireButton.onclick = function (){
+            newRow.style.backgroundColor = "gray";
+            hireButtonCell.remove();
+            brojac--;
+            totall.innerHTML = brojac;
+        }
+    } else if (role === "student") {
+        newRow.style.backgroundColor = "green";
+    }
+
+    tabela.appendChild(newRow)
+
+}
+function invalidPass(password){
+    if(password.length < 10){
+        return false;
+    }
+    let goleBukva = false;
+    let imatBr = false;
+    for (let i = 0; i < password.length; i++) {
+        let char = password[i];
+        if (char >= 'A' && char <= 'Z') {
+            goleBukva = true;
+        }
+        if (char >= '0' && char <= '9') {
+            imatBr = true;
+        }
+    }
+    return goleBukva && imatBr;
+}
+</script>
+</html>
