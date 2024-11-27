@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+.card{
+    width: 200px;
+    height: 200px;
+    padding: 10px;
+    margin: 5px;
+    text-align: center;
+}
+
+</style>
+<body>
+<h1>Registriraj let</h1>
+<div><label>Ime i Prezime</label><input id="imeIprezime" type="text"></div>
+<div><label>Oznaka</label><input id="oznaka" type="text"></div>
+<div><label>Koordinati</label><input id="koordinati" type="text"></div>
+<div><label>Radius</label><input id="radius" type="text"></div>
+<div><label>Visina</label><input id="visina" type="text"></div>
+<div>
+    <select id="tip">
+        <option>Dron</option>
+        <option>Edrilica</option>
+    </select>
+</div>
+<div><button id="najava" onclick="funNajava()">Najava</button></div>
+<h2>Regionalni letovi</h2>
+</body>
+<script>
+function funNajava(){
+    let imeIprezime = document.getElementById('imeIprezime').value
+    let oznaka = document.getElementById('oznaka').value
+    let koordinati = document.getElementById('koordinati').value
+    let radius = parseInt(document.getElementById('radius').value)
+    let visina = parseInt(document.getElementById('visina').value)
+    let tip = document.getElementById('tip').value
+    console.log(imeIprezime)
+
+    if(imeIprezime === ''|| oznaka===''|| isNaN(radius)|| isNaN(visina) || koordinati===''||tip===''){
+        alert("greska")
+        return;
+    }
+    if(validOznaka(oznaka) === false){
+        alert("Nevalidna oznaka")
+        return;
+    }
+    if (areDigitsTheSame(oznaka)===false){
+        if (visina > 150 || radius > 500) {
+            alert("se nadminuva radiusot ili visinata")
+            return;
+        }
+    }
+    let card = document.createElement('div')
+    card.classList.add('card')
+    card.innerHTML = "<p>"+imeIprezime+"</p>"+
+                     "<p>Radius: "+radius+"</p>"+
+                     "<p>Visina: "+visina+"</p>"+
+                        "<p>"+tip+"</p>"
+    let potvrdiButton = document.createElement('button')
+    potvrdiButton.textContent = "Potvrdi"
+    potvrdiButton.onclick = function (){
+        card.style.background = 'green'
+    }
+    card.appendChild(potvrdiButton);
+    let izbrisiButton = document.createElement('button')
+    izbrisiButton.textContent = "Izbrisi"
+    izbrisiButton.onclick = function (){
+        card.remove();
+    }
+    card.appendChild(izbrisiButton)
+    if (tip === "Edrilica") {
+        card.style.border = "2px solid black";
+    }
+    if(tip === "Dron" && radius === visina){
+        card.style.border = "2px solid black";
+    }
+    document.body.appendChild(card);
+}
+function areDigitsTheSame(tablica) {
+    let parts = tablica.split('-')
+    let [prvDel, str, tretDel] =parts
+    if (str.length === 4) {
+        return str[0] === str[1] && str[1] === str[2] && str[2] === str[3];
+    }
+    return false;
+}
+function validOznaka(oznaka){
+    let parts = oznaka.split('-')
+    if(parts.length!==3){
+        return false;
+    }
+    let [prvdel, vtordel, tretDel] =parts
+    if(prvdel.length!==2 || !isUppercase(prvdel)){
+        return false;
+    }
+    if(vtordel.length!==3 || !isUppercase(vtordel)){
+        return false;
+    }
+    if(tretDel.length!==4 || !isDigits(tretDel)){
+        return false;
+    }
+    return true
+}
+function isUppercase(prvdel){
+    for(let char of prvdel){
+        if(char < 'A' || char > 'Z'){
+            return false;
+        }
+    }
+    return true;
+}
+function isDigits(tretDel){
+    for(let char of tretDel){
+        if(char < '0' || char > '9'){
+            return false;
+        }
+    }
+    return true;
+}
+</script>
+</html>
+
+
