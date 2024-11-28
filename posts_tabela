@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+</style>
+<body>
+<h1>Post details</h1>
+<div><label>Naslov</label><input type="text" id="naslov"></div>
+<div><label>Detali</label>
+    <textarea id="details" name="details"></textarea>
+</div>
+<div><label>Content type: </label>
+    <label>Paid</label><input type="radio" name="contentType" value="paid">
+    <label>Free</label><input type="radio" name="contentType" value="free">
+</div>
+<div>
+    <label>KAtegorija</label>
+    <select id="kategorija">
+        <option>Nauka</option>
+        <option>Edukacija</option>
+        <option>Industrija</option>
+    </select>
+</div>
+<div><button id="import" onclick="importPost()">Import post</button></div>
+<div>Posts: <span id="total">0</span></div>
+<table id="tabela">
+    <tr>
+        <th>Title</th>
+        <th>Post</th>
+        <th>Link</th>
+        <th>Type</th>
+        <th>Category</th>
+        <th>Actions</th>
+    </tr>
+</table>
+<div>
+    <h2>Deleted posts</h2>
+    <ul id="deletedLinks"></ul>
+</div>
+</body>
+<script>
+    let brojac = 0;
+    let deletedLinks = [];
+function importPost(){
+    let naslov = document.getElementById('naslov').value
+    let detali = document.getElementById('details').value
+    let type = document.getElementsByName('contentType')
+    let contenttype = null;
+    for(let radio of type){
+        if(radio.checked){
+            contenttype = radio.value
+            break;
+        }
+    }
+    let kategorija = document.getElementById('kategorija').value
+    if(!validNaslov(naslov) || detali==='' || !contenttype){
+        alert('Greska')
+        return;
+    }
+    let url = "https://www.finki.ukim.mk/"
+    let linkurl = url + naslov.toLowerCase()
+    let tabela = document.getElementById('tabela')
+    let newrow = document.createElement('tr')
+    newrow.innerHTML = "<td>"+naslov+"</td>"+
+        "<td>"+detali+"</td>"+
+        "<td>"+ linkurl +"</td>"+
+        "<td>"+ contenttype +"</td>"+
+        "<td>"+ kategorija +"</td>"
+    let actionsCell = document.createElement('td');
+    let publishButton = document.createElement('button');
+    let removeButton = document.createElement('button');
+
+    publishButton.textContent = "Publish";
+    removeButton.textContent = "Remove";
+
+    actionsCell.appendChild(publishButton);
+    actionsCell.appendChild(removeButton);
+
+    newrow.appendChild(actionsCell);
+
+    publishButton.onclick = function (){
+        newrow.style.backgroundColor = 'blue'
+        publishButton.disabled = true
+        removeButton.disabled = true
+        brojac ++;
+        let totall = document.getElementById('total')
+        totall.innerHTML = brojac
+
+    }
+    removeButton.onclick = function (){
+        deletedLinks.push(linkurl)
+        updateDeletedLinksList()
+        tabela.deleteRow(newrow.rowIndex);
+        brojac--
+        if(brojac <= 0){
+            brojac = 0;
+        }
+        let totall = document.getElementById('total')
+        totall.innerHTML = brojac
+    }
+
+    tabela.appendChild(newrow)
+
+}
+function validNaslov(naslov){
+    for(let i = 0; i < naslov.length; i++){
+        let ch = naslov[i]
+        if(ch==='%' || ch==='!' || ch==='*' || ch==='&' || ch==='$'){
+            return false;
+        }
+    }
+    return true;
+}
+    function updateDeletedLinksList(){
+        let list = document.getElementById('deletedLinks');
+        list.innerHTML = '';
+        for(let i = 0; i < deletedLinks.length; i++){
+            let link = deletedLinks[i];
+            let listItem = document.createElement('li');
+            listItem.textContent = link;
+            list.appendChild(listItem);
+        }
+    }
+
+</script>
+</html>
+
+
