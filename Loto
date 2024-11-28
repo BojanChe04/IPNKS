@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+.circle{
+    display: inline-block;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    margin: 2px;
+    border: 1px solid black;
+}
+.card{
+    width:420px;
+    height: auto;
+    margin: 5px;
+    padding: 5px;
+    display: inline-block;
+    border: 1px solid #ddd;
+}
+
+
+</style>
+<body>
+<div id="telo">
+<div>
+<h1>Uplati loto</h1>
+<div><label>Ime i Prezime</label><input id="imeIprezime" type="text"></div>
+<div><label>Suma</label><input id="suma" type="text"></div>
+<div><label>Sifra</label><input id="sifra" type="text"></div>
+<div><label>Kombinacija</label><input id="kombinacija" type="text"></div>
+<div><label>Bonus</label>
+    <select id="bonus">
+        <option>Yes</option>
+        <option>No</option>
+    </select>
+</div>
+<div><button id="najava" onclick="funAdd()">Add</button></div>
+</div>
+<div>
+<h1>Srekjni broevi</h1>
+    <div id="randomCombination"></div>
+    <div><button id="generirajButton" onclick="generiraj()">Generiraj pobednik</button></div>
+</div>
+</div>
+</body>
+<script>
+    let brojac = 0;
+    let winningCombination = [];
+function funAdd(){
+    let imeIprezime = document.getElementById('imeIprezime').value
+    let suma = parseInt(document.getElementById('suma').value)
+    let sifra = document.getElementById('sifra').value
+    let kombinacija = document.getElementById('kombinacija').value
+    let bonus = document.getElementById('bonus').value
+
+
+    if(imeIprezime === '' || isNaN(suma) || sifra=== '' || kombinacija === '' || bonus === ''){
+        alert("Greska")
+        return;
+    }
+    let existingSifra = document.getElementById(sifra);
+    if (existingSifra) {
+        alert("Greska: Ovaa sifra vekje e iskoristena!");
+        return;
+    }
+    if (!validSifra(sifra)) {
+        alert("Greska: Sifrata sodrzi nevalidni karakteri!");
+        return;
+    }
+
+    let card = document.createElement('div')
+    card.id = sifra
+    card.classList.add('card')
+
+    let combinationHTML = ''
+    let numbers = kombinacija.split(',')
+    for(let i=0; i<numbers.length; i++){
+        combinationHTML += '<span class="circle">' + numbers[i] + '</span>'
+    }
+
+    card.innerHTML = "<p>Ime: "+imeIprezime+"</p>"+
+        "<p>Code: "+sifra+"</p>"+
+        "<p>Combination: "+combinationHTML+"</p>"
+
+    let getPaidButton = document.createElement('button')
+    getPaidButton.textContent = "get paid"
+    card.appendChild(getPaidButton)
+    getPaidButton.onclick = function (){
+        
+    }
+
+        card.setAttribute('data-combination', numbers.join(','));
+        document.getElementById('telo').appendChild(card);
+    brojac++
+
+}
+function validSifra(sifra){
+    for(let i = 0; i<sifra.length; i++){
+        let ch = sifra[i]
+        if(!((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch==='%' || ch==='!')){
+            return false;
+        }
+    }
+    return true;
+}
+    function generiraj() {
+        if (brojac < 5) {
+            alert("Mora da ima 5 karticki");
+            return;
+        }
+
+        let randomCombination = [];
+        while (randomCombination.length < 6) {
+            let num = Math.floor(Math.random() * 31) + 1;
+            if (!randomCombination.includes(num)) {
+                randomCombination.push(num);
+            }
+        }
+
+        let combinationHTML = '';
+        for (let i = 0; i < randomCombination.length; i++) {
+            combinationHTML += '<span class="circle">' + randomCombination[i] + '</span>';
+        }
+
+        document.getElementById('randomCombination').innerHTML = combinationHTML;
+        checkWinners();
+    }
+    function checkWinners() {
+        let winningNumbers = [];
+        let winningSpans = document.querySelectorAll('#randomCombination .circle');
+        for (let i = 0; i < winningSpans.length; i++) {
+            winningNumbers.push(parseInt(winningSpans[i].textContent));
+        }
+
+        let cards = document.querySelectorAll('.card');
+
+        for (let i = 0; i < cards.length; i++) {
+            let card = cards[i];
+            let cardCombination = card.getAttribute('data-combination').split(',');
+            let matches = 0;
+            for (let j = 0; j < cardCombination.length; j++) {
+                if (winningNumbers.includes(parseInt(cardCombination[j]))) {
+                    matches++;
+                }
+            }
+            if (matches <= 3) {
+                card.style.backgroundColor = 'yellow';
+            } else if (matches === 4 || matches === 5) {
+                card.style.backgroundColor = 'blue';
+            } else if (matches >= 6) {
+                card.style.backgroundColor = 'green';
+            }
+        }
+    }
+
+
+</script>
+</html>
+
+
