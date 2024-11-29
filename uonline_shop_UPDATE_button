@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+</style>
+<body>
+<h1>Online shop</h1>
+<div><label>Ime i prezime</label><input type="text" id="imeIprezime"></div>
+<div><label>Item</label><input type="text" id="item"></div>
+<div><label>Item code</label><input type="text" id="code"></div>
+<div><label>Item description</label><input type="text" id="opis"></div>
+<div><label>Price</label><input type="text" id="price"></div>
+<div>Used
+    <select id="usedUnused">
+        <option>used</option>
+        <option>unused</option>
+    </select>
+</div>
+<div><button id="addButton" onclick="add()">Add</button></div>
+<h2>Used table</h2>
+
+<table id="usedtable">
+    <tr>
+        <td>Name</td>
+        <td>Item</td>
+        <td>Price</td>
+        <td>Code</td>
+        <td>Number</td>
+        <td>Actions</td>
+    </tr>
+</table>
+<h2>Unused table</h2>
+<table id="unUsedtable">
+    <tr>
+        <td>Name</td>
+        <td>Item</td>
+        <td>Price</td>
+        <td>Code</td>
+        <td>Number</td>
+        <td>Actions</td>
+    </tr>
+</table>
+</body>
+<script>
+    function add(){
+        let imeIprezime = document.getElementById('imeIprezime').value
+        let item = document.getElementById('item').value
+        let code = document.getElementById('code').value
+        let opis = document.getElementById('opis').value
+        let price = parseInt(document.getElementById('price').value)
+        let usedUnused = document.getElementById('usedUnused').value
+        if(imeIprezime==='' || item===''||code===''||opis===''|| isNaN(price)||usedUnused===''){
+            alert("Greska")
+            return
+        }
+        if(usedUnused === "used"){
+            let existingCode = document.getElementById(code)
+            if(existingCode){
+                alert("Kodeot vekje postoi")
+                return;
+            }
+            let kataBr = ''
+            for(let i = 0; i<code.length; i++){
+                if(code[i] !=='!' || (code[i] >= '0' && code[i]<='9')){
+                    kataBr+=code[i];
+                }
+            }
+            let tabelaUsed = document.getElementById('usedtable')
+            let newRow = document.createElement('tr')
+            newRow.id = code;
+            newRow.innerHTML = "<td>"+imeIprezime+"</td>"+
+                "<td>"+item+"</td>"+
+                "<td>"+price+"</td>"+
+                "<td>"+code+"</td>"+
+                "<td>"+kataBr+"</td>"
+
+            let actionButtonCell = document.createElement('td')
+            let actionButton = document.createElement('button')
+            actionButton.textContent = "Sold"
+            actionButtonCell.appendChild(actionButton)
+
+            let updateButton = document.createElement('button');
+            updateButton.textContent = "Update";
+            actionButtonCell.appendChild(updateButton);
+
+            newRow.appendChild(actionButtonCell)
+            tabelaUsed.appendChild(newRow)
+            actionButton.onclick  = function (){
+                newRow.style.backgroundColor = 'green'
+                actionButton.parentNode.removeChild(actionButton)
+            }
+
+            updateButton.onclick = function () {
+                if (updateButton.textContent === "Update") {
+                    let cells = newRow.querySelectorAll('td');
+                    for (let i = 0; i < cells.length - 1; i++) {
+                        cells[i].innerHTML = "<input type='text' value='" + cells[i].innerHTML + "'>";
+                    }
+                    updateButton.textContent = "Save";
+                }
+                else{
+                    let cells = newRow.querySelectorAll('td');
+                    for (let i = 0; i < cells.length - 1; i++) {
+                        let inputField = cells[i].querySelector('input');
+                        if (inputField) {
+                            cells[i].innerHTML = inputField.value;
+                        }
+                    }
+                    updateButton.textContent = "Update";
+                }
+            }
+
+        }  if(usedUnused === "unused"){
+            let existingCode = document.getElementById(code)
+            if(existingCode){
+                alert("Kodeot vekje postoi")
+                return;
+            }
+            let kataBr = ''
+            for(let i = 0; i<code.length; i++){
+                if(code[i] !=='!' || (code[i] >= '0' && code[i]<='9')){
+                    kataBr+=code[i];
+                }
+            }
+            let tabelaUnused = document.getElementById('unUsedtable')
+            let newRow = document.createElement('tr')
+            newRow.id = code;
+            newRow.innerHTML = "<td>"+imeIprezime+"</td>"+
+                "<td>"+item+"</td>"+
+                "<td>"+price+"</td>"+
+                "<td>"+code+"</td>"+
+                "<td>"+kataBr+"</td>"
+
+            let actionButtonCell = document.createElement('td')
+            let actionButton = document.createElement('button')
+            actionButton.textContent = "Sold"
+            actionButtonCell.appendChild(actionButton)
+
+            let updateButton = document.createElement('button');
+            updateButton.textContent = "Update";
+            actionButtonCell.appendChild(updateButton);
+
+            newRow.appendChild(actionButtonCell)
+            tabelaUnused.appendChild(newRow)
+            actionButton.onclick  = function (){
+                newRow.style.backgroundColor = 'green'
+                actionButton.parentNode.removeChild(actionButton)
+            }
+
+            updateButton.onclick = function () {
+                if (updateButton.textContent === "Update") {
+                    let cells = newRow.querySelectorAll('td');
+                    for (let i = 0; i < cells.length - 1; i++) {
+                        cells[i].innerHTML = "<input type='text' value='" + cells[i].innerHTML + "'>";
+                    }
+                    updateButton.textContent = "Save";
+                }
+                else{
+                    let cells = newRow.querySelectorAll('td');
+                    for (let i = 0; i < cells.length - 1; i++) {
+                        let inputField = cells[i].querySelector('input');
+                        if (inputField) {
+                            cells[i].innerHTML = inputField.value;
+                        }
+                    }
+                    updateButton.textContent = "Update";
+                }
+            }
+        }
+    }
+</script>
+</html>
+
+
