@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+
+</style>
+<body>
+<div><input id="broj" >
+    <button id="shiftLeft" onclick="shiftLeft()"><</button>
+    <button id="shiftRight" onclick="shiftRight()">></button>
+    <button id="convert" onclick="convert()">Convert</button>
+    <button id="store" onclick="storee()">Store</button>
+    <button id="check" onclick="checkk()">Check</button>
+</div>
+<ul id="rezultat">
+
+</ul>
+</body>
+<script>
+    function shiftLeft() {
+        let broj = document.getElementById('broj').value;
+        if (broj !== '') {
+            let br = broj.slice(1) + broj[0];
+            document.getElementById('broj').value = br;
+            // let li = document.createElement('li');
+            // li.textContent = br;
+            // let ul = document.getElementById('rezultat');
+            // ul.appendChild(li);
+        } else {
+            alert("Greska");
+        }
+    }
+    function shiftRight() {
+        let broj = document.getElementById('broj').value;
+        if (broj !== '') {
+            let br = broj[broj.length - 1] + broj.slice(0, -1);
+            document.getElementById('broj').value = br;
+            // let li = document.createElement('li');
+            // li.textContent = br;
+            // let ul = document.getElementById('rezultat');
+            // ul.appendChild(li);
+        } else {
+            alert("Greska");
+        }
+    }
+    function convert(){
+        let novbr = ''
+        let broj = document.getElementById('broj').value
+        if(broj!==''){
+            for(let i = 0; i < broj.length; i++){
+                let cifra = parseInt(broj[i])
+                let newcifra = cifra - 1
+                if(newcifra < 0){
+                    newcifra = 9
+                }
+                novbr+=newcifra
+            }
+            document.getElementById('broj').value = novbr;
+            // let li = document.createElement('li');
+            // li.textContent = novbr;
+            // let ul = document.getElementById('rezultat');
+            // ul.appendChild(li);
+        }
+        else{
+            alert("Greska")
+        }
+    }
+    function storee(){
+        let br = document.getElementById('broj').value
+        let li = document.createElement('li')
+        li.textContent = br
+        let ul = document.getElementById('rezultat')
+        ul.appendChild(li)
+    }
+
+</script>
+</html>
