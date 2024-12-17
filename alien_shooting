@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+<style>
+
+</style>
+<body>
+<div id="buttons">
+    <button onclick="up()" id="up">Up</button>
+    <button onclick="down()" id="down">Down</button>
+    <button onclick="shoot()" id="shoot">Shoot</button>
+</div>
+<img src="493cbe03-346a-41a6-9d03-9bc080230272.jpg" id="avion"/>
+<img src="efccd29f-bf04-4a53-9bc7-12ff8391877f.jpg" id="alien"/>
+
+<style>
+    button{
+        margin:5px;
+        padding: 5px;
+        color: darkgreen;
+        background-color: mediumseagreen;
+        border-radius: 10px;
+        border: 1px solid darkgreen;
+        font-weight: bolder;
+        text-align: center;
+        width: 100px;
+        box-shadow: black 2px 5px 7px;
+        cursor: pointer;
+    }
+    #alien{
+        position: absolute;
+        width: 150px;
+        height: 150px;
+    }
+    #avion{
+        position: absolute;
+        width: 250px;
+        height: 200px;
+    }
+    #bullet{
+        width: 50px;
+        height: 3px;
+        position: absolute;
+        background-color: red;
+        display: none;
+    }
+</style>
+
+
+<div id="bullet"></div>
+<script>
+    function getRandomIntInclusive(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+    }
+    window.onload = function(){
+        let x = getRandomIntInclusive(300,1000)
+        let y = getRandomIntInclusive(250,600)
+
+        document.getElementById('alien').style.top = y + "px"
+        document.getElementById('alien').style.left = x + "px"
+    }
+    document.getElementById("avion").style.top="60px";
+
+    function down(){
+        let avion = document.getElementById("avion").style.top.valueOf()
+        avion = parseInt(avion)
+
+        let k = document.getElementById("avion").style.top = (avion + 10) + "px"
+        k=parseInt(k)
+
+        let bullet = document.getElementById("bullet").style.top = (k + 95) + "px"
+        bullet = parseInt(bullet)
+
+        document.getElementById("bullet").style.top=(k+95) + "px";
+        document.getElementById("bullet").style.left=240 + "px";
+    }
+
+    function up(){
+        let avion = document.getElementById("avion").style.top.valueOf()
+        avion = parseInt(avion)
+
+        let k = document.getElementById("avion").style.top = (avion - 10) + "px"
+        k=parseInt(k)
+
+        let bullet = document.getElementById("bullet").style.top = (k + 95) + "px"
+        bullet = parseInt(bullet)
+
+        document.getElementById("bullet").style.top=(k+95) + "px";
+        document.getElementById("bullet").style.left=240 + "px";
+    }
+
+    function shoot() {
+        let bullet = document.getElementById("bullet")
+        bullet.style.display = "inline-block"
+
+        anime({
+            targets: "#bullet",
+            translateX: 1000,
+            easing: "linear",
+            duration: 2000
+        })
+        let x = bullet.style.left.valueOf();
+        x = parseInt(x);
+
+        let alien_x = document.getElementById("alien").style.left.valueOf();
+        alien_x = parseInt(alien_x);
+
+        let alien_y = document.getElementById("alien").style.top.valueOf();
+        alien_y = parseInt(alien_y);
+
+        if (x >= alien_y + 20 || x <= alien_y + 20) {
+            setTimeout(kill, 1000);
+        }
+    }
+    function kill(){
+        document.getElementById("alien").style.display="none";
+    }
+
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
