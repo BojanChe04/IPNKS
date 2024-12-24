@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<style>
+
+</style>
+<body>
+<div><label>Ime</label><input type="text" id="ime"></div>
+<div><label>Plata</label><input type="text" id="plata"></div>
+<div><label>Mesec</label><input type="text" id="mesec"></div>
+<button id="add" onclick="addFunction()">ADD</button>
+<table id="tabela">
+    <tr>
+        <th>Ime</th>
+        <th>Plata</th>
+        <th>Mesec</th>
+    </tr>
+</table>
+
+<div id="chart" style="width:100%; height:400px;"></div>
+<script>
+
+    function addFunction(){
+        let ime = document.getElementById("ime").value
+        let plata = parseInt(document.getElementById("plata").value)
+        let mesec = document.getElementById("mesec").value
+
+        let tabela = document.getElementById("tabela")
+        let newRow = document.createElement('tr')
+        newRow.innerHTML = "<td>"+ime+"</td>"+"<td>"+plata+"</td>"+"<td>"+mesec+"</td>"
+        tabela.appendChild(newRow)
+
+        grafik();
+    }
+
+    function grafik(){
+        let tabela = document.getElementById("tabela")
+        let rows = tabela.getElementsByTagName("tr")
+
+        let months = [];
+        let plati = [];
+
+        for (let i = 1; i < rows.length; i++){
+            let cells = rows[i].getElementsByTagName("td")
+            let month = cells[2].innerText
+            let plata = parseInt(cells[1].innerText)
+
+            if(!months.includes(month)){
+                months.push(month)
+                plati.push(plata)
+            }
+            else{
+                let index=months.indexOf(month)
+                plati[index] +=plata;
+            }
+        }
+        let data = [
+            {
+                x: months,
+                y: plati,
+                type: 'bar'
+            }
+        ];
+
+        let layout = {
+            title: 'Monthly Salaries',
+            xaxis: { title: 'Month' },
+            yaxis: { title: 'Total Salary' }
+        };
+
+        Plotly.newPlot('chart', data, layout);
+
+    }
+
+</script>
+</body>
+</html>
