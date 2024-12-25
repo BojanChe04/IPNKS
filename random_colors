@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<style>
+textarea{
+    width: 300px;
+    height: 100px;
+}
+.color-text {
+    position: absolute;
+    opacity: 0; /* Start with hidden */
+    transition: opacity 1s ease-in-out; /* Fade-in effect */
+}
+#output{
+    position: relative;
+    height: 500px;
+    width: 500px;
+    border: 1px solid black
+}
+</style>
+<body>
+
+<div id="text">
+    <textarea id="colors">
+    </textarea>
+    <button onclick="prikazi()">Prikazi</button>
+</div>
+<div id="output"></div>
+<script>
+
+    function prikazi(){
+        let text = document.getElementById('text')
+
+        let input = document.getElementById('colors').value.trim()
+        let colors = input.split(" ")
+        let colorCounts = {}
+        for(let i = 0; i < colors.length; i++){
+            let color = colors[i]
+            if(color){
+                if(colorCounts[color]){
+                    colorCounts[color]++
+                }
+                else{
+                    colorCounts[color] = 1
+                }
+            }
+        }
+        let output = document.getElementById('output');
+        output.innerHTML = '';
+        text.innerHTML = ''
+        let delay = 0
+        for(let color in colorCounts){
+            let size = colorCounts[color]*20
+            let colorElement = document.createElement('div');
+            colorElement.className = 'color-text';
+            colorElement.style.color = color;
+            colorElement.style.fontSize = size + 'px';
+            colorElement.textContent = color;
+
+            let randomTop = Math.floor(Math.random() * (output.offsetHeight - 200));
+            let randomLeft = Math.floor(Math.random() * (output.offsetWidth - 200));
+
+            colorElement.style.top = randomTop + 'px'
+            colorElement.style.left = randomLeft + 'px'
+            output.appendChild(colorElement);
+
+            setTimeout(()=>{
+                colorElement.style.opacity = 1
+            },delay)
+            delay+=1000
+        }
+
+    }
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
