@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<style>
+.kocka{
+    width: 50px;
+    height: 50px;
+    border: 2px solid black;
+    text-align: center;
+}
+#kockiKontejner{
+    display: flex;
+}
+#pole{
+    width: 200px;
+    height: 100px;
+    align-items: center;
+    align-content: center;
+    padding-left: 25px;
+    border-radius: 5px;
+
+}
+</style>
+<body>
+<div id="pole"><input type="text" id="broj"></div>
+<button onclick="roll()" >Roll</button>
+<div id="kockiKontejner">
+    <div class="kocka"></div>
+    <div class="kocka"></div>
+</div>
+<script>
+    let finalRolls = [];
+    function roll(){
+        const kocki = document.getElementsByClassName("kocka")
+        finalRolls = [];
+        Array.from(kocki).forEach((dice, index) =>{
+
+            anime({
+                targets: dice,
+                innerHTML: [1, 6],
+                round: 1,
+                easing: 'easeOutElastic(1, .8)',
+                duration:2000,
+                update: function (anim){
+                    dice.textContent = Math.floor(Math.random()*6) + 1
+                },
+                complete: function (){
+                    let finalRoll = Math.floor(Math.random()*6) + 1
+                    dice.textContent = finalRoll
+                    finalRolls[index] = finalRoll;
+
+                    if (finalRolls.length === kocki.length) {
+                        setBackgr();
+                    }
+                }
+
+            })
+        })
+    }
+    function setBackgr(){
+        let broj = parseInt(document.getElementById("broj").value)
+        console.log(broj)
+        let final1 = parseInt(finalRolls[0])
+        console.log(final1)
+        let final2 = parseInt(finalRolls[1])
+        console.log(final2)
+
+       let filed = document.getElementById('pole')
+        let sum = 0
+        sum = final1 + final2
+        console.log(sum)
+        if(sum === broj){
+            filed.style.backgroundColor = 'green'
+        }
+        else if(sum !== broj){
+            filed.style.backgroundColor = "red"
+        }
+
+    }
+</script>
+</body>
+</html>
+
+
