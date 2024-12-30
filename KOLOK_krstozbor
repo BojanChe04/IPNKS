@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<style>
+    .box {
+        border: black solid 3px;
+        height: 120px;
+        width: 120px;
+        font-size: 120px;
+        text-align: center;
+        margin: 2px;
+        color: black;
+    }
+</style>
+<body>
+<script>
+    let data = '["bukva","jazik","vokal","misla","tablo"]';
+    let newData = JSON.parse(data)
+
+    let randomIndex = Math.floor(Math.random() * newData.length) + 1
+    let randomWord = newData[randomIndex]
+    console.log(randomWord)
+
+    let count = 0;
+
+    newLineOfInputs()
+   function newLineOfInputs(){
+        let newDiv = document.createElement("div")
+       document.body.appendChild(newDiv)
+       for(let i = 0; i < 5; i++){
+           let createInput = document.createElement('input')
+           createInput.setAttribute("class", "box")
+           createInput.setAttribute("id", "br" + count++)
+           createInput.addEventListener("keydown", function (e){
+               if(e.key === "Enter"){
+                   checkTheInputs(newDiv)
+               }
+           })
+           newDiv.appendChild(createInput)
+       }
+   }
+   function checkTheInputs(newDiv){
+        let inputs = newDiv.getElementsByTagName("input")
+       let flag = true;
+           for(let input of inputs){
+               if(input.value.length !== 1){
+                   alert("Vnesete po edna bukva vo sekoe pole")
+                   flag = false
+                   break;
+               }
+           }
+       if(flag){
+           checkWord(newDiv)
+       }
+   }
+    function checkWord(row) {
+        let inputs = row.getElementsByTagName("input");
+        let word = ""
+
+        for (let input of inputs) {
+            let char = input.value;
+            word+=char
+            if (randomWord.includes(char)) {
+                input.style.backgroundColor = "yellow";
+            } else {
+                input.style.backgroundColor = "white";
+            }
+        }
+        for (let i = 0; i < 5; i++) {
+            if (randomWord.charAt(i) === word.charAt(i)) {
+                let input = document.getElementById('br' + (count - 5 + i));
+                input.style.backgroundColor = "green";
+            }
+        }
+        if(randomWord === word){
+            for (let i = 0; i < 5; i++) {
+                if (randomWord.charAt(i) === word.charAt(i)) {
+                    let input = document.getElementById('br' + (count - 5 + i));
+                    input.style.backgroundColor = "green";
+                }
+            }
+            let inputs = document.getElementsByTagName('input')
+            anime({
+                targets: inputs,
+                color: ['#000', 'yellow'],
+                duration: 1000,
+                rotateY: 360,
+                easing: 'easeInOutQuad',
+            });
+            document.body.style.backgroundColor = "green"
+            return
+        }
+        console.log(word)
+        newLineOfInputs()
+    }
+</script>
+</body>
+</html>
+
+
+
