@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Overflow Animation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<button onclick="moveLeft()"><</button>
+<button onclick="moveRight()">></button>
+
+<script>
+    let data = '[{"background-color":"red", "width":"100px", "height":"100px"}, ' +
+        '{"background-color":"green", "width":"50px", "height":"100px"}, ' +
+        '{"background-color":"blue", "width":"100px", "height":"50px"}]';
+    data = JSON.parse(data);
+
+    let index = 0;
+    let isAnimating = false;
+
+
+    let newDiv = document.createElement('div');
+    newDiv.style.position = 'absolute';
+    newDiv.style.top = '500px'
+    changeDiv(data[0]);
+    document.body.appendChild(newDiv);
+
+    function changeDiv(dataElem) {
+        newDiv.style.backgroundColor = dataElem['background-color'];
+        newDiv.style.width = dataElem['width'];
+        newDiv.style.height = dataElem['height'];
+    }
+
+    function moveLeft() {
+        if (isAnimating) return;
+
+        isAnimating = true;
+
+        anime({
+            targets: newDiv,
+            translateX: '-1600px',
+            duration: 1000,
+            easing: 'easeInOutQuad',
+            complete: () => {
+                index++;
+                if (index >= data.length) index = 0;
+                changeDiv(data[index]);
+
+                newDiv.style.transform = 'translateY(-50%) translateX(1600px)';
+                anime({
+                    targets: newDiv,
+                    translateX: '0px',
+                    duration: 1000,
+                    easing: 'easeInOutQuad',
+                    complete: () => {
+                        isAnimating = false;
+                    }
+                });
+            }
+        });
+    }
+
+    function moveRight() {
+        if (isAnimating) return;
+
+        isAnimating = true;
+
+        anime({
+            targets: newDiv,
+            translateX: '1600px',
+            duration: 1000,
+            easing: 'easeInOutQuad',
+            complete: () => {
+                index--;
+                if (index < 0) index = data.length - 1;
+                changeDiv(data[index]);
+                newDiv.style.transform = 'translateY(-50%) translateX(-1600px)';
+                anime({
+                    targets: newDiv,
+                    translateX: '0px',
+                    duration: 1000,
+                    easing: 'easeInOutQuad',
+                    complete: () => {
+                        isAnimating = false;
+                    }
+                });
+            }
+        });
+    }
+</script>
+</body>
+</html>
