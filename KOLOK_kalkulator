@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+<div>
+    <p id="here" style="display: inline"></p>
+</div>
+<div>
+    <input id="ravenka" type="text">
+    <button id="kopce" onclick="proveri()">Proveri</button>
+</div>
+<p>Preostanato vreme:<span id="vreme">60</span>s</p>
+<script>
+
+    let num1 = getDigits(1,10)
+    let num2 = getDigits(1,10)
+    let num3 = getDigits(10,100)
+    let num4 = getDigits(10,100)
+    let num5 = getDigits(100,1000)
+    let target = getDigits(100,1000)
+
+    let here = document.getElementById('here')
+    here.innerHTML = `${num1} ${num2} ${num3} ${num4} ${num5} = ${target}`;
+
+
+    window.onload = function (){
+        interval = setInterval(clock, 1000)
+    }
+
+    function proveri(){
+        let ravenka = document.getElementById('ravenka').value
+        let rez = eval(ravenka)
+
+        if(rez === ravenka){
+            alert('Correct')
+            interval = setInterval(clock, 1000)
+        }
+        else{
+            alert('Icorrect')
+        }
+    }
+    function getDigits(min,max){
+        return Math.floor(Math.random()*(max-min)) + min
+    }
+    function clock(){
+        let timer = document.getElementById('vreme')
+        timer.innerHTML -= 1
+
+        if(timer.innerHTML === '0'){
+            let input = document.getElementById('ravenka')
+            input.disabled = true
+            let btn = document.getElementById('kopce')
+            btn.disabled = true
+            clearInterval(interval);
+        }
+    }
+</script>
+</body>
+</html>
+
