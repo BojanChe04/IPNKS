@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        img{
+            position: absolute;
+            width: 170px;
+            height: 170px;
+        }
+        body{
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<img src="s1.png" height="225" width="225"/>
+<img src="s2.png" height="1275" width="1115"/>
+<img src="s6.png" height="512" width="512"/>
+<img src="s4.png" height="720" width="747"/>
+<script>
+    let sliki = document.getElementsByTagName('img')
+    for (let i = 0; i<sliki.length; i++ ){
+        let img = sliki[i]
+        sliki[i].style.top = "-200px"
+        sliki[i].style.left = Math.random() * window.innerWidth + 'px';
+
+        anime({
+            targets: sliki[i],
+            translateY: [0, 1200],
+            duration: (Math.random() + 0.5) * 5000,
+            easing: 'linear',
+            loop: true,
+            rotate: '360deg',
+            complete: function() {
+                sliki[i].style.top = '-200px';
+                sliki[i].style.left = Math.random() * 1200 + 'px';
+            }
+        });
+    }
+</script>
+</body>
+</html>
+
