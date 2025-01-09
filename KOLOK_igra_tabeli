@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        table{
+            border: solid;
+            margin: 15px;
+
+        }
+        tr,td{
+            border: 1px solid black;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div>Broj: <span id="br"></span></div>
+<script>
+    let url = "https://webhook.site/614e8235-3a91-44fd-81fc-431bdc239286"
+    fetch(url)
+    .then(response=>response.json())
+    .then(function (data){
+        console.log(data)
+
+        for (let k = 0; k<3; k++){
+            let table = document.createElement('table')
+            table.setAttribute("id", data[k])
+
+            for(let i = 0; i < 3; i ++){
+                let newRow = document.createElement('tr')
+                for (let j = 0; j < 5; j++){
+                    let newCell = document.createElement('td')
+                    let index = i*5 + j
+                    newCell.innerHTML = data[k].numbers[index]
+                    newCell.addEventListener('click', function (){
+                        checkBroj(data[k].numbers[index],newCell)
+                    })
+                    newRow.appendChild(newCell)
+                }
+                table.appendChild(newRow)
+            }
+            document.body.appendChild(table)
+        }
+    })
+    randomBroj()
+    function randomBroj(){
+        let broj = Math.floor(Math.random()*100)
+        let spance = document.getElementById('br')
+        spance.innerHTML = broj
+
+        setTimeout(randomBroj,3000)
+    }
+
+    function checkBroj(element, cell){
+
+        let curr = parseInt(document.getElementById('br').innerText)
+        if (curr === element){
+            cell.style.backgroundColor = 'green'
+        }
+        else{
+            cell.style.backgroundColor = 'red'
+        }
+    }
+
+</script>
+</body>
+</html>
+
+
+
