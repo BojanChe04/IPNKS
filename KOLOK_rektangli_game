@@ -161,5 +161,106 @@
 </body>
 </html>
 
+//////////////////////////////BEZ ANIME.JS////////////////////////////////////////////
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        body{
+            overflow: hidden;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+<button id="buttonLeft" onclick="func_left()"><</button>
+<button id="buttonRight" onclick="func_right()">></button>
+<script>
+
+    let index = 0;
+    let data = []
+
+    let url = "https://webhook.site/29545e05-b81b-46b6-9178-3120dd0bffe1"
+    // fetch(url)
+    // .then(response=>response.json())
+    // .then(function (data){
+    //     console.log(data)
+    //     changeDiv(data[0])
+    // })
+    fetch(url)
+        .then(response => response.json())
+        .then(function (fetchedData) {
+            console.log(fetchedData);
+            data = fetchedData;
+            changeDiv(data[0]);
+        })
+
+    let newDiv = document.createElement('div')
+    newDiv.style.position = 'absolute';
+
+    function changeDiv(element){
+        newDiv.style.width = element.width
+        newDiv.style.height = element.height
+        newDiv.style.backgroundColor = element.backgroundColor
+        newDiv.style.left = '0px'
+
+
+    }
+    document.body.appendChild(newDiv)
+
+    function func_left(){
+
+        index++
+        if(index > data.length){
+            index = 0;
+        }
+        changeDiv(data[index])
+        let leftPos = 1500
+        newDiv.style.left = leftPos + "px"
+        function func_move(){
+
+            leftPos-=10
+            newDiv.style.left = leftPos + "px";
+            if(leftPos <= 0){
+                newDiv.style.left = "0px"
+            }else {
+                setTimeout(func_move, 20)
+            }
+        }
+        func_move()
+    }
+
+    function func_right(){
+        index++
+        if(index >= data.length){
+            index = 0;
+        }
+
+        let leftPos = 0
+        newDiv.style.left = leftPos + "px"
+        function func_move(){
+
+            leftPos+=10
+            newDiv.style.left = leftPos + "px";
+            if(leftPos >= 1530){
+                changeDiv(data[index])
+                newDiv.style.left = "0px"
+            }else {
+                setTimeout(func_move, 20)
+            }
+        }
+        func_move()
+    }
+
+
+</script>
+</body>
+</html>
+
+
+
 
 
