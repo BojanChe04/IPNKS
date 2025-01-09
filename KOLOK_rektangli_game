@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        #con{
+            width: 800px;
+            height: 600px;
+            border: 2px solid black;
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="con"></div>
+<div>Score: <span id="score">0</span></div>
+
+<script>
+    let url = "https://webhook.site/614e8235-3a91-44fd-81fc-431bdc239286"
+    fetch(url)
+    .then(response=>response.json())
+    .then(function (data){
+        console.log(data)
+
+        let con = document.getElementById('con')
+
+        for (let i = 0; i<data.length; i++){
+            let rek = document.createElement('div')
+            rek.setAttribute("direction", data[i].dir)
+            rek.style.width = data[i].width
+            rek.style.height = data[i].height
+            rek.style.left = data[i].left + "px"
+            rek.style.top = data[i].top + "px"
+            rek.style.backgroundColor = data[i].color
+            rek.style.position = "absolute"
+            rek.style.border = "1px solid black"
+            rek.setAttribute("id", data[i].id)
+            rek.setAttribute("score", data[i].score)
+            rek.setAttribute("pos", i % 2);
+
+            console.log(data[i].id + " ",data[i].score)
+
+            con.appendChild(rek)
+
+        }
+        moveElements()
+    })
+
+    let skor = 0;
+    let brojac = 0;
+    function moveElements(){
+        brojac ++;
+        for (let i=1;i<=6;i++)
+        {
+            let rectangles = document.getElementById(i)
+
+            let position = rectangles.getAttribute("position")
+            position = parseInt(position)
+            let direction = rectangles.getAttribute("direction")
+            let left = parseInt(rectangles.style.left)
+            let top = parseInt(rectangles.style.top)
+            if (direction==="horizontal"){
+                if (position==0)
+                {
+                    left-=10
+                    if (left<=0)
+                    {
+                        rectangles.setAttribute("position",1)
+                    }
+                }
+                else{
+                    left+=10
+                    if (left+parseInt(rectangles.style.width)>=800)
+                    {
+                        rectangles.setAttribute("position",0)
+                    }
+                }
+            }
+            else {
+                if (position==0)
+                {
+                    top-=10
+                    if (top<=0)
+                    {
+                        rectangles.setAttribute("position",1)
+                    }
+                }
+                else{
+                    top+=10
+                    if (top+parseInt(rectangles.style.top)>=700)
+                    {
+                        rectangles.setAttribute("position",0)
+                    }
+                }
+            }
+            rectangles.style.left = left+"px"
+            rectangles.style.top = top+"px"
+        }
+        if (brojac<50)
+        {
+            setTimeout(moveElements,50)
+        }
+        else{
+            grom()
+            brojac=0
+        }
+    }
+
+    let grom_brojac = 0
+    function grom(){
+        grom_brojac++;
+        let gromche = document.createElement("div")
+        let parent = document.getElementById('con')
+        gromche.style.width = "3px"
+        gromche.style.height = "600px"
+        gromche.style.backgroundColor = "black"
+        gromche.style.position = "absolute";
+        gromche.className = "gromche";
+
+
+        let leftPos = Math.floor(Math.random()*800)
+        gromche.style.left = leftPos + "px"
+
+        parent.appendChild(gromche)
+
+
+        for(let i = 1; i<=6; i++){
+            let obj = document.getElementById(i)
+            let start = parseInt(obj.style.left)
+            let end = parseInt(obj.style.left) + parseInt(obj.style.width)
+
+            if(leftPos>=start && leftPos<=end){
+                skor+=parseInt(obj.getAttribute("score"))
+                obj.style.display = "none"
+                obj.setAttribute("score",0)
+            }
+        }
+
+        let scoreDisplay = document.getElementById("score");
+        if (scoreDisplay) {
+            scoreDisplay.innerText = skor;
+        }
+
+        if (grom_brojac<3)
+        {
+            setTimeout(clear_grom,900)
+            setTimeout(moveElements,1000)
+        }
+    }
+    function clear_grom(){
+        let groms = document.getElementsByClassName("gromche")
+        for (let i=0;i<groms.length;i++)
+        {
+            groms[i].style.display = "none"
+        }
+    }
+</script>
+</body>
+</html>
+
+
+
