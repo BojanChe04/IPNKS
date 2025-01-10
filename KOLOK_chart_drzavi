@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<style>
+    img{
+        width: 200px;
+        height: 150px;
+        margin: 15px;
+    }
+</style>
+<body>
+<button onclick="grafik_za_sve()">Prikazi sve</button>
+<select id = selectt onchange="poseben_chart()">
+
+</select>
+<div>
+<img src="" id="zname" onchange="">
+</div>
+<div id="chart"></div>
+<script>
+
+    let podatoci = []
+
+    let url = "https://disease.sh/v3/covid-19/countries"
+    fetch(url)
+    fetch(url)
+        .then(response=>response.json())
+        .then(function (data) {
+            podatoci = data
+            console.log(data)
+            dodadi_options()
+            grafik_za_sve()
+        })
+
+
+    function dodaj_slika(){
+        let drzava = document.getElementById('selectt').value
+        let obj_drzava = podatoci.find((country) => country.country == drzava)
+        let link = obj_drzava.countryInfo.flag
+        console.log(link)
+        let zname = document.getElementById('zname')
+        zname.setAttribute('src',link)
+
+        anime({
+            targets:'#zname',
+            scale:[0.5, 1],
+            duration:1000,
+            easing: 'easeInOutQuad',
+        })
+    }
+
+    function dodadi_options(){
+        let select = document.getElementById('selectt')
+        let drzavi = podatoci.map((country) =>country.country)
+        for (let i = 0; i < drzavi.length; i++){
+            let op = document.createElement('option')
+            op.value = drzavi[i]
+            op.innerText = drzavi[i]
+            select.appendChild(op)
+        }
+    }
+
+
+    function poseben_chart(){
+        let drzava = document.getElementById('selectt').value
+        let obj_drzava = podatoci.find((country) => country.country == drzava)
+        let trace = {
+            x:["Cases", "Recovered", "Deaths"],
+            y:[obj_drzava.cases, obj_drzava.recovered, obj_drzava.deaths],
+            type:"bar"
+        }
+        dodaj_slika()
+        Plotly.newPlot('chart',[trace])
+    }
+
+    function grafik_za_sve(){
+        let drzavi = podatoci.map((country) =>country.country)
+        let cases = podatoci.map((country) =>country.cases)
+        let recover = podatoci.map((country) =>country.recovered)
+        let detahs = podatoci.map((country) =>country.deaths)
+
+        let trace1 = {
+            x:drzavi,
+            y:cases,
+            type:'bar'
+        }
+        let trace2 = {
+            x:drzavi,
+            y:recover,
+            type:'bar'
+        }
+        let trace3 = {
+            x:drzavi,
+            y:detahs,
+            type:'bar'
+        }
+
+        let layout = {
+            title: {
+                text: 'Covid cases for all countries'
+            }
+        };
+
+        let cel = [trace1, trace2, trace3]
+        Plotly.newPlot('chart',cel,layout)
+    }
+</script>
+</body>
+</html>
+
+
+
