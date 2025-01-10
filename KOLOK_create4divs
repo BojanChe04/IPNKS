@@ -104,4 +104,100 @@ div{
 
 
 
+//////////////moe resenie////////////////////////////////
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+</head>
+<body>
+
+<script>
+
+    let elements = []
+
+    let url = "https://webhook.site/53b4b227-9118-46c4-9204-7054e86a0b08"
+    fetch(url)
+        .then(response => response.json())
+        .then (function (data){
+            elements = data
+            console.log(data)
+            for (let i = 0; i < data.length; i++){
+                let el = document.createElement('div')
+                el.style.width = data[i].size + "px"
+                el.style.height = data[i].size + "px"
+                el.style.backgroundColor = data[i].color
+                el.style.position = 'absolute'
+                el.style.left = Math.floor(Math.random()*400) + "px"
+                el.style.top = Math.floor(Math.random()*400)+ "px"
+
+                el.onclick = function () {
+                    transform(el);
+                };
+
+
+                document.body.appendChild(el)
+            }
+
+        })
+    function transform(el) {
+        anime({
+            targets: el,
+            scale: [1, 2],
+            duration: 500,
+            easing: 'easeOutExpo',
+            complete: () => {
+                createClones(el);
+            }
+        });
+    }
+    function createClones(el) {
+
+        el.style.visibility = 'hidden';
+
+        const size = parseInt(el.style.width);
+        const bgColor = el.style.backgroundColor;
+        const left = parseInt(el.style.left);
+        const top = parseInt(el.style.top);
+
+        const createClone = (offsetX, offsetY) => {
+            const clone = document.createElement('div');
+            clone.style.width = size  + 'px';
+            clone.style.height = size + 'px';
+            clone.style.backgroundColor = bgColor;
+            clone.style.position = 'absolute';
+            clone.style.left = left + offsetX + 'px';
+            clone.style.top = top + offsetY + 'px';
+
+            clone.addEventListener('click', function (){
+                transform(clone)
+            })
+            
+
+            document.body.appendChild(clone);
+
+
+        };
+
+
+        createClone(size, size);
+        createClone(-size, size);
+        createClone(-size, -size);
+        createClone(size, -size);
+
+    }
+</script>
+</body>
+</html>
+
+
+
+
+
+
 
