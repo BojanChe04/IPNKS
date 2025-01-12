@@ -95,3 +95,93 @@
 </script>
 </body>
 </html>
+
+
+//////////////////////////////bez anime///////////////////////////
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<style>
+    body{
+        overflow: hidden;
+    }
+</style>
+<body>
+<button onclick="func_levo()"><</button>
+<button onclick="func_desno()">></button>
+<script>
+    let podatoci = []
+    let index = 0
+    let url = "https://webhook.site/5430dedd-5534-4f75-b921-e0fca8924cd8"
+    fetch(url)
+    .then(response => response.json())
+    .then (function (data){
+        podatoci = data
+        console.log(data)
+        changeDiv(data[0])
+    })
+    let newDiv = document.createElement('div')
+    document.body.appendChild(newDiv)
+    function changeDiv(el){
+
+        newDiv.style.position = 'absolute'
+        newDiv.style.width = el.width
+        newDiv.style.height = el.height
+        newDiv.style.top = "50px"
+        newDiv.style.backgroundColor = el['background-color']
+
+
+    }
+    function func_levo(){
+        index++
+        if(index>=podatoci.length){
+            index = 0
+        }
+        let leftPos = 1550
+        newDiv.style.left = leftPos + "px"
+        changeDiv(podatoci[index])
+        function move(){
+            leftPos-=10
+            newDiv.style.left = leftPos + "px"
+            if(leftPos<=0){
+                newDiv.style.left = 0 + "px"
+
+            }
+            else{
+                setTimeout(move,20)
+            }
+        }
+        move();
+
+    }
+    function func_desno(){
+        index++
+        if(index>=podatoci.length){
+            index = 0
+        }
+        let leftPos = 0
+        newDiv.style.left = leftPos + "px"
+        function move(){
+            leftPos+=10
+            newDiv.style.left = leftPos + "px"
+            if(leftPos>=1550){
+                newDiv.style.left = 0 + "px"
+                changeDiv(podatoci[index])
+            }
+            else{
+                setTimeout(move,20)
+            }
+        }
+        move();
+    }
+</script>
+</body>
+</html>
+
