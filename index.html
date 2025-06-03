@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<style>
+div{
+    margin-left: 5px;
+    margin-right: 5px;
+    align-content: center;
+}
+span{
+    left: 40px;
+    position: relative;
+    align-content: center;
+    text-align: center;
+}
+h1{
+    margin-left: 550px;
+}
+#chart1{
+    width: 700px;
+    display: inline-block;
+}
+#chart2{
+    width: 700px;
+    display: inline-block;
+}
+</style>
+<body>
+<h1>SOLAR SYSTEM</h1>
+<div id="divPlaneti"></div>
+<div id="chart1"></div>
+<div id="chart2"></div>
+<script>
+
+    let planets = []
+    let object
+    let colors = ["yellow", "orange", "lightblue", "red", "orangered", "yellowgreen", "cornflowerblue", "purple"];
+    let url = "https://api.le-systeme-solaire.net/rest/bodies"
+    fetch(url)
+    .then(response=>response.json())
+    .then(function (fetcheddata){
+        console.log(fetcheddata)
+        object = fetcheddata
+        funkcija()
+    })
+
+    let brojacColors = 0
+    let names = []
+    function funkcija(){
+        let divPlaneti = document.getElementById('divPlaneti')
+        for (let i = 0; i < object.bodies.length; i++){
+            if(object.bodies[i].isPlanet === true){
+                // console.log(object.bodies[i].englishName)
+                let start = 70
+                let krug = document.createElement('div')
+                krug.style.width = 160 + "px"
+                krug.style.height = 160 + "px"
+                krug.style.left = (i * 10) + "px"
+                krug.style.top = "70px"
+                krug.classList.add('krugoj')
+                krug.style.border = '2px solid black'
+                krug.style.borderRadius = '50%'
+                krug.style.display = "inline-block"
+                krug.setAttribute('id',i)
+                krug.style.backgroundColor = colors[brojacColors]
+                brojacColors++;
+                let name = document.createElement('span')
+                name.innerText = object.bodies[i].englishName
+                names.push(object.bodies[i].englishName)
+                planets.push(krug)
+                krug.appendChild(name)
+                divPlaneti.appendChild(krug)
+            }
+        }
+        animePlaneti()
+        console.log(planets)
+        chartsFunkcija()
+    }
+    function chartsFunkcija() {
+        let moons = []
+        let gravities = []
+        for (let i = 0; i < object.bodies.length; i++){
+            if(object.bodies[i].isPlanet === true){
+                if(object.bodies[i].moons && object.bodies[i].moons.length > 0) {
+                    console.log("Moons: " + object.bodies[i].moons.length)
+                    moons.push(object.bodies[i].moons.length)
+                }else{
+                    console.log("Moons: " + '0')
+                    moons.push(0)
+                }
+
+            }
+        }
+        for (let i = 0; i < object.bodies.length; i++){
+            if(object.bodies[i].isPlanet === true){
+                let mn = object.bodies[i].gravity
+                gravities.push(mn)
+            }
+        }
+        console.log("Gravitacii: "+gravities)
+
+        let data = [{
+            x: names,
+            y: moons,
+            type: 'bar'
+        }]
+        Plotly.newPlot('chart1',data)
+
+        let data2 = [{
+            x: names,
+            y: gravities,
+            type: 'scatter'
+        }]
+        Plotly.newPlot('chart2',data2)
+    }
+    function animePlaneti() {
+        anime({
+            targets:planets,
+            translateX:[-300, 0],
+            opacity: [0, 1],
+            easing: 'easeOutExpo',
+            delay: anime.stagger(200)
+
+        })
+    }
+</script>
+</body>
+</html>
