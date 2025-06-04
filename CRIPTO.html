@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<style>
+img{
+    width: 50px;
+    height: 50px;
+    display: block;
+}
+body{
+
+}
+#charts{
+    display: flex;
+}
+#coins{
+    margin-top: 10px;
+    display: flex;
+    width: 1500px;
+    height: 200px;
+    flex-wrap: wrap;
+    gap: 10px
+}
+</style>
+
+<body>
+<div>
+    Choose sorting parametar
+    <select id="parametar" onchange="funkcija()">
+        <option>Price</option>
+        <option>marketCap</option>
+        <option>Change</option>
+    </select>
+</div>
+<div id="coins">
+</div>
+
+<div id="charts">
+    <div id="chart1"></div>
+    <div id="chart2"></div>
+</div>
+
+<script>
+
+    let object;
+
+    let url = "https://api.coinranking.com/v2/coins"
+        fetch(url)
+    .then(response=>response.json())
+    .then(function (fetcheddata){
+        console.log(fetcheddata)
+        object = fetcheddata
+        funkcija()
+        updateCoinsList()
+    })
+
+    let sortedCoins = []
+
+    function updateCoinsList(){
+
+    }
+    function funkcija(){
+
+        let value = document.getElementById('parametar').value
+        document.getElementById('coins').innerHTML = "";
+
+        sortedCoins = object.data.coins.map(coin=>({
+            name:coin.name,
+            icon: coin.iconUrl,
+            price: parseInt(coin.price),
+            marketCap: parseFloat(coin.marketCap),
+            change: parseFloat(coin.change),
+            sparkline: coin.sparkline,
+            symbol: coin.symbol,
+            rank: coin.rank,
+            volume: parseFloat(coin["24hVolume"])
+        }))
+        if(value === "Price"){
+            sortedCoins.sort((a,b) => b.price - a.price)
+        }
+        else if(value === "marketCap"){
+            sortedCoins.sort((a,b) => b.marketCap - a.marketCap)
+        }else{
+            sortedCoins.sort((a,b)=>b.change - a.change)
+        }
+        for(let i = 0; i < object.data.coins.length; i++){
+            let logo = document.createElement('img')
+            logo.src = sortedCoins[i].icon
+            logo.classList.add("logo");
+            logo.style.left = (i * 60) + "px"
+            logo.style.cursor = "pointer";
+            logo.addEventListener('click', function (){
+                chartZaIkona(sortedCoins[i])
+            })
+            let coinsDiv = document.getElementById('coins')
+            coinsDiv.appendChild(logo)
+        }
+        animacija()
+        barChart()
+    }
+    function chartZaIkona(coin){
+        let sparkLineData = coin.sparkline
+        let data = {
+            y: sparkLineData,
+            type: 'scatter'
+        };
+        let layout = {
+            title: `${coin.name} Price Movement`,
+            xaxis: {title: "Time"},
+            yaxis: {title: "Price (USD)"}
+        }
+        Plotly.newPlot('chart2', [data], layout);
+    }
+    function animacija(){
+        anime({
+            targets:'.logo',
+            translateY:[-500,0],
+            duration:500,
+            easing: 'easeInOutQuad',
+            delay: anime.stagger(100)
+
+        })
+    }
+
+    function barChart(){
+
+        let names = sortedCoins.map(coin => coin.name)
+        let prices = sortedCoins.map(coin => coin.price)
+
+        let data = [
+            {
+                x: names,
+                y: prices,
+                type: 'bar'
+            }
+        ];
+
+        Plotly.newPlot('chart1', data);
+    }
+
+
+</script>
+</body>
+</html>
