@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<style>
+    #container{
+        display: flex;
+        justify-content: space-between;
+        height: 300px;
+        width: 1500px;
+    }
+    #chn1{
+        border: 1px solid black;
+        width: 700px;
+        height: 300px;
+
+    }
+    #chn2{
+        border: 1px solid black;
+        width: 700px;
+        height: 300px;
+    }
+    #cards{
+        width: 1500px;
+        border: 1px solid black;
+        height: 400px;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: row;
+    }
+    img{
+        width: 90px;
+        height: 90px;
+    }
+    .card {
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid black;
+        border-radius: 10px;
+        font-family: sans-serif;
+    }
+    #playersTitle {
+        width: 100px;
+        padding: 10px;
+        font-weight: bold;
+    }
+
+    #igraci {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        width: 1400px; /* или flex: 1; */
+        overflow-y: auto;
+    }
+    #cards{
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+    }
+    #chart1{
+        width: 300px;
+        height: 270px;
+        margin-left: 50px;
+        margin-bottom: 30px;
+    }
+    #chart2{
+        width: 290px;
+        height: 270px;
+        margin-left: 400px;
+        margin-bottom: 30px;
+    }
+
+
+</style>
+<body>
+<div id="container">
+    <div id="chn1">
+        <div id="sliki">
+            <img src="1.jpg" id="gameImage">
+        </div>
+        <button onclick="startGame()">
+            Start game
+        </button>
+        <div>Number is: <span id="result">0</span></div>
+    </div>
+    <div id="chn2">
+        <div>Status</div>
+        <div><button onclick="showStatus()">Show</button></div>
+        <div id="charts">
+            <div id="chart1"></div>
+            <div id="chart2"></div>
+        </div>
+    </div>
+</div>
+<div id="cards">
+    <div>Players</div>
+    <div id="igraci">
+
+    </div>
+</div>
+
+<script>
+    let data = {
+        "players": [
+            {
+                "name": "Alice",
+                "nickname": "alice5",
+                "type": 1,
+                "amount": 150,
+                "symbol": "fire"
+            },
+            {
+                "name": "Bob",
+                "nickname": "bobster@",
+                "type": 3,
+                "amount": 200,
+                "symbol": "ice"
+            },
+            {
+                "name": "Charlie",
+                "nickname": "charli35",
+                "type": 2,
+                "amount": 300,
+                "symbol": "water"
+            },
+            {
+                "name": "Diana",
+                "nickname": "diana5",
+                "type": 4,
+                "amount": 250,
+                "symbol": "earth"
+            },
+            {
+                "name": "Evan",
+                "nickname": "evan5",
+                "type": 1,
+                "amount": 180,
+                "symbol": "fire"
+            },
+            {
+                "name": "Fiona",
+                "nickname": "fiona",
+                "type": 3,
+                "amount": 220,
+                "symbol": "ice"
+            },
+            {
+                "name": "George",
+                "nickname": "george",
+                "type": 2,
+                "amount": 400,
+                "symbol": "water"
+            },
+            {
+                "name": "Hannah",
+                "nickname": "hannah",
+                "type": 4,
+                "amount": 350,
+                "symbol": "earth"
+            },
+            {
+                "name": "Ian",
+                "nickname": "ian",
+                "type": 1,
+                "amount": 275,
+                "symbol": "fire"
+            },
+            {
+                "name": "Julia",
+                "nickname": "julia",
+                "type": 3,
+                "amount": 320,
+                "symbol": "ice"
+            },
+            {
+                "name": "Kevin",
+                "nickname": "kevin",
+                "type": 2,
+                "amount": 410,
+                "symbol": "water"
+            }
+        ]
+    };
+
+    let players = []
+    let amounts = []
+    let colors = ['red', 'green', 'blue', 'orange', 'yellow', 'pink']
+    function validName(){
+        players = data.players.filter(p => !p.nickname.includes("5") && !p.nickname.includes("@"));
+        console.log(players)
+    }
+    function kreiranjeKarticki(){
+
+        for(let i = 0; i < players.length; i ++){
+            let card = document.createElement('div')
+            card.classList.add('card')
+            card.style.width = 100 + 'px'
+            card.style.height = 200 + 'px'
+            card.style.backgroundColor = colors[i]
+            card.style.border = '1px solid black'
+            card.innerHTML = "Name: " + players[i].name + '<br>' +
+                "Nickname: " + players[i].nickname + '<br>' +
+                "Amount: " + players[i].amount + '<br>' +
+                "Type: " + players[i].type + '<br>' +
+                '<span class="pluses"></span>';
+
+
+
+            let parent  = document.getElementById('igraci')
+            parent.appendChild(card)
+        }
+
+    }
+    validName()
+    kreiranjeKarticki()
+
+    let counts = [0,0,0,0]
+
+    function startGame(){
+        let gameImage = document.getElementById('gameImage')
+        let images = ['1.jpg','2.jpg','3.jpg','4.jpg']
+        let results = ['1','2','3','4']
+
+        let index = 0;
+        let interval = setInterval(()=>{
+            gameImage.src = images[index]
+            index = (index + 1) % images.length
+        }, 500)
+
+        setTimeout(()=>{
+            clearInterval(interval)
+
+            let randomIndex = Math.floor(Math.random()*images.length)
+            gameImage.src = images[randomIndex]
+            document.getElementById('result').innerHTML = results[randomIndex]
+            counts[randomIndex]++
+
+            for(let i = 0; i < players.length; i++){
+                if(players[i].type === randomIndex+1){
+                    amounts.push(players[i].amount)
+                    let playCards = document.querySelectorAll(".card")
+                    let playCard = playCards[i]
+                    let plusesSpan = playCard.querySelector(".pluses");
+                    plusesSpan.textContent += "+";
+                }
+            }
+        },3000)
+    }
+    function showStatus(){
+        let data = [{
+            x: ['Type 1', 'Type 2', 'Type 3', 'Type 4'],
+            y: counts,
+            type: 'bar',
+
+        }];
+
+        Plotly.newPlot('chart1', data);
+
+        let data2 = [{
+            x: ['Type 1', 'Type 2', 'Type 3', 'Type 4'],
+            y: amounts,
+            type: 'bar',
+
+        }];
+
+        Plotly.newPlot('chart2', data2);
+    }
+</script>
+</body>
+</html>
